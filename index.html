@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Глоссарий: Прыжки в воду — мобильная версия</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        /* Заголовок */
+        .header {
+            background: #0f172a;
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #94a3b8;
+            margin-top: 6px;
+            font-size: 0.85rem;
+        }
+
+        /* Строка поиска */
+        .search-section {
+            background: #f8fafc;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+            min-width: 180px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            font-size: 0.95rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+            background: white;
+            -webkit-appearance: none;
+        }
+
+        .search-input:focus {
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+        }
+
+        .search-clear {
+            background: #e2e8f0;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #475569;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            white-space: nowrap;
+        }
+
+        .search-clear:active {
+            background: #cbd5e1;
+            transform: scale(0.96);
+        }
+
+        .search-stats {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 10px;
+            padding-left: 4px;
+        }
+
+        /* Вкладки (табы) — адаптация под телефон */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+            gap: 2px;
+            padding: 8px 12px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 40px;
+            font-family: inherit;
+            touch-action: manipulation;
+            flex: 1;
+            min-width: fit-content;
+            white-space: nowrap;
+        }
+
+        .tab-btn:active {
+            background: #e2e8f0;
+            transform: scale(0.97);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #0284c7;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* Контент вкладок */
+        .tab-content {
+            display: none;
+            padding: 20px 16px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Сетка карточек — адаптивная, для телефона одна колонка */
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        /* Карточка термина */
+        .term-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 16px 18px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+            word-break: break-word;
+        }
+
+        .term-card:active {
+            transform: scale(0.99);
+            background: #f1f5f9;
+        }
+
+        .term-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+            border-left: 4px solid #0284c7;
+            padding-left: 12px;
+            margin-bottom: 10px;
+            line-height: 1.35;
+        }
+
+        .term-desc {
+            color: #334155;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            margin-left: 16px;
+        }
+
+        .term-desc::before {
+            content: "—";
+            margin-right: 8px;
+            color: #0284c7;
+            font-weight: 600;
+        }
+
+        /* Подсветка найденного текста */
+        .highlight {
+            background-color: #fef08a;
+            color: #1e293b;
+            font-weight: 600;
+            padding: 0 2px;
+            border-radius: 4px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px 20px;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            background: #f1f5f9;
+            text-align: center;
+            padding: 14px;
+            font-size: 0.7rem;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* ============================================ */
+        /* ДОПОЛНИТЕЛЬНАЯ АДАПТАЦИЯ ДЛЯ МАЛЕНЬКИХ ТЕЛЕФОНОВ */
+        /* ============================================ */
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header p {
+                font-size: 0.75rem;
+            }
+            
+            .search-section {
+                padding: 12px 14px;
+            }
+            
+            .search-input {
+                padding: 11px 14px 11px 38px;
+                font-size: 0.9rem;
+            }
+            
+            .search-clear {
+                padding: 9px 14px;
+                font-size: 0.8rem;
+            }
+            
+            .tabs {
+                padding: 6px 8px;
+                gap: 4px;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+            }
+            
+            /* Горизонтальная прокрутка для вкладок на узких телефонах */
+            .tabs::-webkit-scrollbar {
+                height: 2px;
+            }
+            
+            .tabs::-webkit-scrollbar-track {
+                background: #e2e8f0;
+                border-radius: 10px;
+            }
+            
+            .tabs::-webkit-scrollbar-thumb {
+                background: #94a3b8;
+                border-radius: 10px;
+            }
+            
+            .tab-btn {
+                padding: 10px 12px;
+                font-size: 0.75rem;
+                white-space: nowrap;
+                flex: 0 0 auto;
+            }
+            
+            .tab-content {
+                padding: 16px 12px;
+            }
+            
+            .term-card {
+                padding: 14px 14px;
+            }
+            
+            .term-title {
+                font-size: 1rem;
+                padding-left: 10px;
+            }
+            
+            .term-desc {
+                font-size: 0.84rem;
+                margin-left: 12px;
+            }
+            
+            .search-stats {
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* Для очень маленьких экранов (iPhone SE и подобные) */
+        @media (max-width: 380px) {
+            .tab-btn {
+                padding: 8px 10px;
+                font-size: 0.7rem;
+            }
+            
+            .term-title {
+                font-size: 0.95rem;
+            }
+            
+            .term-desc {
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Для планшетов — две колонки */
+        @media (min-width: 600px) and (max-width: 900px) {
+            .glossary-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+            
+            .tab-btn {
+                padding: 14px 18px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Для десктопов и больших планшетов */
+        @media (min-width: 901px) {
+            .glossary-grid {
+                grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+                gap: 20px;
+            }
+            
+            .tab-content {
+                padding: 32px 40px;
+            }
+            
+            .term-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+                border-color: #b9d9f0;
+                background: white;
+            }
+        }
+        
+        /* Улучшение тач-целей */
+        button, .tab-btn, .search-clear {
+            cursor: pointer;
+            min-height: 44px;
+        }
+        
+        @media (max-width: 480px) {
+            button, .tab-btn, .search-clear {
+                min-height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🤿 Глоссарий прыжков в воду</h1>
+        <p>Классификация · Фазы · Техника · Судейство</p>
+    </div>
+
+    <!-- СТРОКА ПОИСКА -->
+    <div class="search-section">
+        <div class="search-box">
+            <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Поиск по терминам..." inputmode="search">
+            </div>
+            <button id="clearSearchBtn" class="search-clear" aria-label="Очистить поиск">✖ Очистить</button>
+        </div>
+        <div id="searchStats" class="search-stats"></div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="tab1">📚 1. Классификация</button>
+        <button class="tab-btn" data-tab="tab2">⚙️ 2. Фазы и оборудование</button>
+        <button class="tab-btn" data-tab="tab3">🏅 3. Элементы и персонал</button>
+        <button class="tab-btn" data-tab="tab4">⚖️ 4. Судейство</button>
+    </div>
+
+    <!-- БЛОК 1 -->
+    <div id="tab1" class="tab-content active">
+        <div class="glossary-grid" id="glossary1"></div>
+    </div>
+
+    <!-- БЛОК 2 -->
+    <div id="tab2" class="tab-content">
+        <div class="glossary-grid" id="glossary2"></div>
+    </div>
+
+    <!-- БЛОК 3 -->
+    <div id="tab3" class="tab-content">
+        <div class="glossary-grid" id="glossary3"></div>
+    </div>
+
+    <!-- БЛОК 4 -->
+    <div id="tab4" class="tab-content">
+        <div class="glossary-grid" id="glossary4"></div>
+    </div>
+    <footer>📱 Адаптивный глоссарий · World Aquatics терминология · Нажмите на вкладку для выбора блока</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 1 БЛОК: Классификация прыжков и основные положения
+    // --------------------------------------------------------------
+    const block1 = [
+        { term: "Amplitude (амплитуда)", desc: "диапазон или размах движения тела, относительно снаряда." },
+        { term: "Armstand (со стойки)", desc: "прыжок со стойки на руках." },
+        { term: "Backward dive (назад)", desc: "прыжки из задней стойки." },
+        { term: "Flying dives (свободное положение)", desc: "прыжки летом." },
+        { term: "Forward dive (вперед)", desc: "прыжки из передней стойки." },
+        { term: "Free Position (свободный полет)", desc: "у прыгуна есть возможность использовать комбинацию положений, но только в прыжках с винтами." },
+        { term: "Inward (подсебя)", desc: "прыжки из задней стойки с вращением вперед." },
+        { term: "Pike (согнувшись)", desc: "прыжок в положении согнувшись с прямыми ногами." },
+        { term: "Reverse (ауэрбах)", desc: "прыжок из передней стойки с вращением назад." },
+        { term: "Running dive (разбег)", desc: "прыжок с разбега." },
+        { term: "Standing dive (с ног)", desc: "прыжок из положения стоя." },
+        { term: "Tuck (группировка)", desc: "прыжок в положении группировка с согнутыми в коленях ногами." },
+        { term: "Twisting dive (винт)", desc: "прыжок с винтами." }
+    ];
+
+    // --------------------------------------------------------------
+    // 2 БЛОК: Фазы выполнения прыжка и оборудование
+    // --------------------------------------------------------------
+    const block2 = [
+        { term: "Approach (разбег)", desc: "разбег к краю вышки с отталкиванием." },
+        { term: "Dive (прыжок)", desc: "отталкивание от снаряда с исполнением определенного элемента со входом в воду." },
+        { term: "Diving board / springboard (трамплин)", desc: "трамплин для прыжков в воду." },
+        { term: "Diving platform (вышка)", desc: "вышка для прыжков в воду." },
+        { term: "Entry (вход)", desc: "вход в воду." },
+        { term: "Feet first entry (в ноги)", desc: "вход в воду (ногами)." },
+        { term: "Flight (полет)", desc: "фаза прыжка в воздухе." },
+        { term: "Hurdle (наскок)", desc: "подход к краю трамплина с отталкиванием." },
+        { term: "Rip entry (чистый вход)", desc: "вход в воду без брызг." },
+        { term: "Take-off (толчок)", desc: "отталкивание." }
+    ];
+
+    // --------------------------------------------------------------
+    // 3 БЛОК: Технические элементы, сложность и персонал
+    // --------------------------------------------------------------
+    const block3 = [
+        { term: "Agent (персонал спортсмена)", desc: "физическое или юридическое лицо, выступающее в качестве представителя спортсменов, занимающихся водными видами спорта." },
+        { term: "Aquatics (водные виды спорта)", desc: "все спортивные дисциплины, регулируемые Всемирной федерацией водных видов спорта, включая плавание, плавание на открытой воде, прыжки в воду, прыжки в воду с большой высоты, водное поло, синхронное плавание." },
+        { term: "Athlete Support Personnel (персонал)", desc: "тренеры, менеджеры, агенты, члены команды, судьи, медицинский персонал." },
+        { term: "Athlete(s) (спортсмен)", desc: "человек, который участвует в соревнованиях и мероприятиях по водным видам спорта на национальном или международном уровне." },
+        { term: "Coach (тренер)", desc: "специалист, руководящий спортсменом." },
+        { term: "Degree of difficulty (коэффициент)", desc: "коэффициент сложности прыжков." },
+        { term: "Diver (прыгун)", desc: "спортсмен, исполняющий элементы прыжков в воду." },
+        { term: "Half somersault (полуоборот)", desc: "половина оборота." },
+        { term: "Head first entry (в руки)", desc: "вход в воду головой." },
+        { term: "Multiplier (множитель)", desc: "расчет итоговой оценки." },
+        { term: "Somersault (сальто)", desc: "оборот." },
+        { term: "Twist (винт)", desc: "оборот вокруг своей оси." }
+    ];
+
+    // --------------------------------------------------------------
+    // 4 БЛОК: Судейство и критерии оценки
+    // --------------------------------------------------------------
+    const block4 = [
+        { term: "Bail out", desc: "срыв прыжка." },
+        { term: "Dive session (программа)", desc: "прыжковая сессия." },
+        { term: "Execution (исполнение)", desc: "демонстрация прыжка." },
+        { term: "Line (линия тела)", desc: "прямое и натянутое положение тела." },
+        { term: "Overrotation / underrotation (ошибка)", desc: "перекрут / недокрут." },
+        { term: "Rip entry (чистый вход)", desc: "вход в воду без брызг." },
+        { term: "Synchronised diving (синхрон)", desc: "синхронные прыжки, исполняемые двумя спортсменами." }
+    ];
+
+    // Все сырые данные по блокам
+    const rawBlocks = {
+        block1: block1,
+        block2: block2,
+        block3: block3,
+        block4: block4
+    };
+
+    // Функция сортировки по термину
+    function sortByTerm(arr) {
+        return [...arr].sort((a, b) => a.term.localeCompare(b.term, 'ru', { sensitivity: 'base' }));
+    }
+
+    // Функция подсветки вхождений
+    function highlightText(text, query) {
+        if (!query || query.trim() === "") return text;
+        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+        return text.replace(regex, `<mark class="highlight">$1</mark>`);
+    }
+
+    // Экранирование спецсимволов для regex
+    function escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Проверка, соответствует ли элемент поисковому запросу
+    function matchesSearch(item, query) {
+        if (!query) return true;
+        const lowerQuery = query.toLowerCase();
+        return item.term.toLowerCase().includes(lowerQuery) || 
+               item.desc.toLowerCase().includes(lowerQuery);
+    }
+
+    // Отрисовка конкретного блока с учетом поиска
+    function renderBlockWithSearch(blockKey, query) {
+        const blockNum = blockKey.slice(-1);
+        const container = document.getElementById(`glossary${blockNum}`);
+        if (!container) return;
+        
+        const originalData = rawBlocks[blockKey];
+        if (!originalData) return;
+        
+        // Фильтрация по поисковому запросу
+        let filtered = originalData;
+        if (query && query.trim() !== "") {
+            filtered = originalData.filter(item => matchesSearch(item, query));
+        }
+        
+        // Сортировка
+        const sorted = sortByTerm(filtered);
+        
+        if (sorted.length === 0) {
+            container.innerHTML = `<div class="no-results">😕 Ничего не найдено в этом блоке</div>`;
+            return;
+        }
+        
+        // Рендер с подсветкой
+        container.innerHTML = sorted.map(item => {
+            const highlightedTerm = highlightText(item.term, query);
+            const highlightedDesc = highlightText(item.desc, query);
+            return `
+                <div class="term-card">
+                    <div class="term-title">${highlightedTerm}</div>
+                    <div class="term-desc">${highlightedDesc}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Перерисовать ВСЕ видимые блоки (для поиска)
+    let currentQuery = "";
+
+    function renderAllBlocks(query) {
+        currentQuery = query;
+        renderBlockWithSearch('block1', query);
+        renderBlockWithSearch('block2', query);
+        renderBlockWithSearch('block3', query);
+        renderBlockWithSearch('block4', query);
+        
+        // Подсчет общего количества найденных терминов
+        let totalMatches = 0;
+        for (let key of ['block1', 'block2', 'block3', 'block4']) {
+            const originalData = rawBlocks[key];
+            if (query && query.trim() !== "") {
+                totalMatches += originalData.filter(item => matchesSearch(item, query)).length;
+            } else {
+                totalMatches += originalData.length;
+            }
+        }
+        
+        const statsDiv = document.getElementById('searchStats');
+        if (query && query.trim() !== "") {
+            statsDiv.innerHTML = `🔎 Найдено: <strong>${totalMatches}</strong> терминов по запросу «${escapeHtml(query)}»`;
+        } else {
+            statsDiv.innerHTML = `📚 Всего терминов: <strong>${totalMatches}</strong> · Введите слово для поиска`;
+        }
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Инициализация
+    renderAllBlocks("");
+
+    // Логика переключения вкладок
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const tabId = btn.getAttribute('data-tab');
+            tabs.forEach(b => b.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            const activeContent = document.getElementById(tabId);
+            if (activeContent) activeContent.classList.add('active');
+        });
+        
+        // Для мобильных: убираем задержку при tap
+        btn.addEventListener('touchstart', (e) => {
+            // просто для улучшения отклика на тач-устройствах
+        });
+    });
+
+    // ПОИСК
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value;
+        renderAllBlocks(query);
+    });
+    
+    searchInput.addEventListener('search', (e) => {
+        // для мобильной клавиатуры
+        const query = e.target.value;
+        renderAllBlocks(query);
+    });
+    
+    clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        renderAllBlocks('');
+        searchInput.focus();
+    });
+    
+    // Адаптация: скрываем клавиатуру при клике на очистку на мобильных
+    clearBtn.addEventListener('touchstart', () => {
+        setTimeout(() => {
+            searchInput.blur();
+        }, 100);
+    });
+</script>
+</body>
+</html>
